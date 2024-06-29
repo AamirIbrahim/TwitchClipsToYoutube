@@ -24,7 +24,7 @@ jobs:
         echo "$GOOGLE_CLIENT_SECRET_JSON" | base64 --decode > client_secret.json
     - name: Decode and save YouTube credentials
       env:
-        YOUTUBE_CREDENTIALS: ${{ secrets.YOUTUBE_CREDENTIALS }}
+        YOUTUBE_CREDENTIALS: ${{ secrets.VALORANT_YOUTUBE_CHANNEL_PICKLE }}
       run: |
         echo "$YOUTUBE_CREDENTIALS" | base64 --decode > youtube_credentials.pickle
     - name: Install dependencies
