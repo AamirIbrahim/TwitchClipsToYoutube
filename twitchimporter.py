@@ -16,7 +16,7 @@ import re
 from pytube import YouTube
 
 client_secrets_file = 'client_secret.json'
-credentials = 'youtube_credentials.pickle'
+credentials_file = 'youtube_credentials.pickle'
 
 client_id = str(os.environ['TWITCH_CLIENT_ID'])
 client_secret = str(os.environ['TWITCH_CLIENT_SECRET'])
