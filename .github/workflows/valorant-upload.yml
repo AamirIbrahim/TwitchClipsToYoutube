@@ -37,5 +37,5 @@ jobs:
         TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
         TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
         GAME_NAME: "valorant"
-        CHANNEL_ID: ${{ secrets.LOL_CHANNEL_ID }}
+        CHANNEL_ID: ${{ secrets.VALORANT_CHANNEL_ID }}
         OUTRO_ID: ${{ secrets.YOUTUBE_OUTRO_ID }}
