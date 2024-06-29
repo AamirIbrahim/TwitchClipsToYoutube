@@ -326,12 +326,12 @@ def main():
         elif game_name == 'valorant':
             formatted_game_name = 'Valorant'
         
-        video_file = "final_video.mp4"  # Path to your video file
+        video_file = "final_video.mp4"
         title = "{0} Daily Moments #{1}".format(formatted_game_name, str(video_count))
         description = "Fuel my Coffee + Twitch addiction here: https://patreon.com/CustardYT?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink \nFeatured Streamers: \n{0}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"  # Category ID for YouTube video categories
-        privacy_status = "public"  # Set video to private
+        privacy_status = "public"
         
         upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
     except Exception as e:
