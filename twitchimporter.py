@@ -212,47 +212,6 @@ def upload_video(youtube, video_file, title, description, tags, category_id, pri
     print("Upload Complete!")
     print("Video URL: https://www.youtube.com/watch?v=" + response['id'])
 
-def upload_to_youtube():
-    # Create a flow object for authentication
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
-    credentials = flow.run_local_server(port=3000)
-
-    # Create a YouTube API client
-    youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
-
-    # Define video details
-    video_file = "final_video.mp4"  # Path to the video file
-    request_body = {
-        "snippet": {
-            "title": "Your Video Title",
-            "description": "Your video description",
-            "tags": ["tag1", "tag2"],
-            "categoryId": "22",  # See https://developers.google.com/youtube/v3/docs/videoCategories/list
-        },
-        "status": {
-            "privacyStatus": "private"  # Set the video privacy status
-        }
-    }
-
-    # Create MediaFileUpload object
-    media = MediaFileUpload(video_file, chunksize=-1, resumable=True)
-
-    # Upload the video
-    request = youtube.videos().insert(
-        part="snippet,status",
-        body=request_body,
-        media_body=media
-    )
-
-    response = None
-    while response is None:
-        status, response = request.next_chunk()
-        if status:
-            print(f"Uploaded {int(status.progress() * 100)}%")
-
-    print("Upload Complete!")
-    print("Video URL: https://www.youtube.com/watch?v=" + response['id'])
-
 def format_clips(broadcaster_name, language, file_name):
     target_resolution = (1920, 1080)  # Specify the target resolution
     text = u'{0}'.format(broadcaster_name)
@@ -277,15 +236,14 @@ def format_clips(broadcaster_name, language, file_name):
     new_height = max(image1.height, image2.height)
     new_image = Image.new("RGBA", (new_width, new_height), (255, 255, 255, 0))
     
-    # Paste image1 and image2 side by side
     new_image.paste(image1, (0, 0))
     new_image.paste(image2, (image1.width, 0))
     new_image.save('combined.png', 'PNG')
     clip = VideoFileClip('clips/' + file_name + '.mp4')
     logo = (ImageClip('combined.png',transparent=True)
     .set_duration(5)
-    .resize(height=50) # if you need to resize...
-    .margin(left=8, top=8, opacity=0) # (optional) logo-border padding
+    .resize(height=50)
+    .margin(left=8, top=8, opacity=0)
     .set_pos(("left","top")))
     final = CompositeVideoClip([clip, logo])
     final.write_videofile("test.mp4")
@@ -294,21 +252,27 @@ def format_clips(broadcaster_name, language, file_name):
 
 def main():
     try:
+        # Downloading Outro from unlisted youtube video for outro
+        # No need for Git LFS
         video_url = 'https://www.youtube.com/watch?v={0}'.format(str(os.environ['OUTRO_ID']))
         yt = YouTube(video_url)
         stream = yt.streams.get_highest_resolution()
         stream.download()
 
-        print(f'Download completed: {yt.title}')
+        # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
         clips = get_top_clips(game_id, client_id, oauth_token)
+
+        # Grab broadcasters to use as description for video's chapters (must be greater than 10 seconds in duration)
         broadcasters = []
         duration_video = []
         duration = 0
         formatted_clips = []
+        
         for idx, clip in enumerate(clips):
             if (clip['duration'] >= 10):
+                # Download clips, Edit them, and add them to our formatted_clips list
                 download_twitch_clip(clip['url'], str(idx) + '_' + clip['broadcaster_name'])
                 formatted_clips.append(format_clips(clip['broadcaster_name'], clip['language'], str(idx) + '_' + clip['broadcaster_name']))
                 broadcasters.append(clip['broadcaster_name'])
@@ -316,6 +280,7 @@ def main():
                 duration_video.append("%02d:%02d" % (minutes, seconds))
                 duration = duration + clip['duration']
         
+        # Put all of our clips together, and then upload
         concatenate_clips(formatted_clips)
         
         youtube, video_count = get_authenticated_service()
@@ -328,7 +293,7 @@ def main():
         
         video_file = "final_video.mp4"
         title = "{0} Daily Moments #{1}".format(formatted_game_name, str(video_count))
-        description = "Fuel my Coffee + Twitch addiction here: https://patreon.com/CustardYT?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink \nFeatured Streamers: \n{0}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
+        description = "{0} \nFeatured Streamers: \n{1}".format(str(os.environ['YOUTUBE_DESCRIPTION']), "\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"  # Category ID for YouTube video categories
         privacy_status = "public"
