@@ -287,12 +287,12 @@ def main():
         formatted_game_name = ''
 
         if game_name == 'league of legends':
-            formatted_game_name = 'League of Legends'
+            formatted_game_name = 'LoL'
         elif game_name == 'valorant':
             formatted_game_name = 'Valorant'
         
         video_file = "final_video.mp4"
-        title = "{0} Bi-Daily Broadcast #{1}".format(formatted_game_name, str(video_count))
+        title = "{0} Bi-Daily Broadcast #{1} Twitch Highlights feat ".format(formatted_game_name, str(video_count))
         description = "{0} \nFeatured Streamers: \n{1}".format(str(os.environ['YOUTUBE_DESCRIPTION']), "\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"  # Category ID for YouTube video categories
