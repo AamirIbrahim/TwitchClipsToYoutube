@@ -264,7 +264,7 @@ def main():
         # Downloading Outro from unlisted youtube video for outro
         # No need for Git LFS
         video_url = 'https://www.youtube.com/{0}'.format(str(os.environ['OUTRO_ID']))
-        download_video(video_url, '/outro')
+        download_video(video_url, 'outro')
         
         # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
