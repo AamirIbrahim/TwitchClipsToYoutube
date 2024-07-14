@@ -13,7 +13,9 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
-from pytube import YouTube
+# from pytube import YouTube
+import yt_dlp
+
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
@@ -250,15 +252,22 @@ def format_clips(broadcaster_name, language, file_name):
     resized_clip = final.resize(newsize=target_resolution)
     return resized_clip
 
+def download_video(url, output_path='.'):
+    ydl_opts = {
+        'format': 'best',
+        'outtmpl': f'{output_path}/%(title)s.%(ext)s',
+    }
+    
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+
 def main():
     try:
         # Downloading Outro from unlisted youtube video for outro
         # No need for Git LFS
         video_url = 'https://www.youtube.com/watch?v={0}'.format(str(os.environ['OUTRO_ID']))
-        yt = YouTube(video_url)
-        stream = yt.streams.get_highest_resolution()
-        stream.download()
-
+        download_video(video_url, '')
+        
         # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
