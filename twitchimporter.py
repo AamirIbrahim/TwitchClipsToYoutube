@@ -13,9 +13,7 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
-# from pytube import YouTube
 import yt_dlp
-
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
@@ -149,7 +147,7 @@ def text_to_transparent_image(text, font_path, font_size, output_path):
 def concatenate_clips(clips):
     target_resolution = (1920, 1080)  # Specify the target resolution
 
-    outro = VideoFileClip('Outro.mp4')
+    outro = VideoFileClip('outro/Outro.mp4')
     resized_outro = outro.resize(newsize=target_resolution)
     clips.append(resized_outro)
     
@@ -265,8 +263,8 @@ def main():
     try:
         # Downloading Outro from unlisted youtube video for outro
         # No need for Git LFS
-        video_url = 'https://www.youtube.com/watch?v={0}'.format(str(os.environ['OUTRO_ID']))
-        download_video(video_url, '')
+        video_url = 'https://www.youtube.com/{0}'.format(str(os.environ['OUTRO_ID']))
+        download_video(video_url, '/outro')
         
         # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
