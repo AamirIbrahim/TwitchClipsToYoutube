@@ -47,18 +47,18 @@ An easy single script for:
    
    You will be asked to sign in once, and then after, your credentials will now be stored as a 'youtube_credentials.pickle' file in your file system.
 3. Base64 encode your client_secret.json and youtube_credentials.pickle:
-```
-  import base64
-  
-  with open('youtube_credentials.pickle', 'rb') as f:
+    ```
+    import base64
+      
+    with open('youtube_credentials.pickle', 'rb') as f:
       encoded_credentials = base64.b64encode(f.read()).decode()
-```
-```
-  import base64
-  
-  with open('client_secret.json', 'rb') as f:
+    ```
+    ```
+    import base64
+      
+    with open('client_secret.json', 'rb') as f:
       encoded_credentials = base64.b64encode(f.read()).decode()
-```
+    ```
 Take both outputs and store as a github secret.
 
 4. Grab your twitch API credentials:
@@ -67,19 +67,25 @@ Take both outputs and store as a github secret.
 5. Store them in your Github Secrets as TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET respectively.
 6. Now create a Github Actions workflow or use any of mine as a template:
 
-   Note: If using my workflow, change ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }} and ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }} to the name you specified in step 3:
+   Note: If using my workflow, change both of these to the GitHub Secret names you specified in step 3:
+
+   - ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }}
+
+   - ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}
+   
+   
   ```
-- name: Decode and save Google client secret
+  - name: Decode and save Google client secret
       env:
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}
       run: |
         echo "$GOOGLE_CLIENT_SECRET_JSON" | base64 --decode > client_secret.json
-- name: Decode and save YouTube credentials
+  - name: Decode and save YouTube credentials
       env:
         YOUTUBE_CREDENTIALS: ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }}
       run: |
         echo "$YOUTUBE_CREDENTIALS" | base64 --decode > youtube_credentials.pickle
-```
+   ```
 7. Finally make changes to these environment variables with your variables for channel ID.
 ```
 - name: python run
@@ -92,7 +98,7 @@ Take both outputs and store as a github secret.
         CHANNEL_ID: "YOUR CHANNEL ID WHICH IS FOUND HERE https://www.youtube.com/account_advanced"
         OUTRO_ID: "YOUR UNLISTED OUTRO YOUTUBE VIDEO ID"
   ```
-7. The workflow takes care of everything else, make sure you make changes to the cron schedule in the workflow so it will upload at the times that you want.
+8. The workflow takes care of everything else, make sure you make changes to the cron schedule in the workflow so it will upload at the times that you want.
 
 
 
