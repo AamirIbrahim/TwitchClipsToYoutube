@@ -3,9 +3,9 @@
 <h2>Summary:</h2>
 
 An easy single script for:
-1. Grabbing the top twitch clips of a specific game (changes to the first paramter in the get_top_clips function will result in how many clips you obtain).
+1. Grabbing the top twitch clips of a specific game (changes to the "first" paramter in the get_top_clips function will result in how many clips you obtain).
     
-    It is currently configured to upload twice a day at 12 hour intervals, set yours accordingly.
+    It is currently configured to upload twice a day at 12 hour intervals with 20 clips per upload, set yours accordingly.
 2. Editing the clips by placing a twitch logo followed by the twitch channel on each clip using the library moviepy.
 3. Concatenating the clips together, downloading the outro from an unlisted youtube link (to bypass GitHub LFS costs).
 4. Uploading to Youtube with the description auto-filling with timestamps of the twitch creators downloaded.
