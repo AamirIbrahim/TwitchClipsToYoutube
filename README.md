@@ -11,10 +11,13 @@ An easy single script for:
 4. Uploading to Youtube with the description auto-filling with timestamps of the twitch creators downloaded.
 5. GitHub Actions workflow to run through twice a day.
 
-<h2>Prerequestites:</h2>
+<h2>Prerequisites:</h2>
+
 1. Google Cloud account to access Youtube Data V3 (Uploading youtube videos via API)
 
-     https://developers.google.com/youtube/v3
+   [https://developers.google.com/youtube/v3](https://developers.google.com/youtube/v3) 
+
+     
 3. Twitch API to grab the clips:
    
      [https://dev.twitch.tv/docs/api/clips/](https://dev.twitch.tv/docs/api/)
@@ -25,7 +28,7 @@ An easy single script for:
 
 <h2>Steps:</h2>
 
-🔒SECURITY NOTE: DO NOT PUSH ANY OF THESE TO A PUBLIC REPOSITORY:🔒
+🔒SECURITY NOTE: DO NOT PUSH ANY OF THESE TO A PUBLIC REPOSITORY🔒
 
   - client_secret.json
 
@@ -56,14 +59,29 @@ An easy single script for:
   with open('client_secret.json', 'rb') as f:
       encoded_credentials = base64.b64encode(f.read()).decode()
 ```
-Take both outputs and store as a github secret with the names YOUTUBE_CREDENTIALS_PICKLE and GOOGLE_CLIENT_SECRET_JSON respectively. (IF CHANGING NAME, CHANGE IT ON WORKFLOW)
+Take both outputs and store as a github secret.
 
 4. Grab your twitch API credentials:
 ![image](https://github.com/user-attachments/assets/2e672c32-57ed-4bd8-b97d-7441efb16bdc)
 
 5. Store them in your Github Secrets as TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET respectively.
-6. Now create a Github Actions workflow or use mine as a template and make changes to these environment variables:
+6. Now create a Github Actions workflow or use any of mine as a template:
+
+   Note: If using my workflow, change ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }} and ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }} to the name you specified in step 3:
   ```
+- name: Decode and save Google client secret
+      env:
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}
+      run: |
+        echo "$GOOGLE_CLIENT_SECRET_JSON" | base64 --decode > client_secret.json
+- name: Decode and save YouTube credentials
+      env:
+        YOUTUBE_CREDENTIALS: ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }}
+      run: |
+        echo "$YOUTUBE_CREDENTIALS" | base64 --decode > youtube_credentials.pickle
+```
+7. Finally make changes to these environment variables with your variables for channel ID.
+```
 - name: python run
       run: python twitchimporter.py
       env:
