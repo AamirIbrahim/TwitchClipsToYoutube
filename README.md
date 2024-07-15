@@ -59,7 +59,7 @@ An easy single script for:
     with open('client_secret.json', 'rb') as f:
       encoded_credentials = base64.b64encode(f.read()).decode()
     ```
-Take both outputs and store as a github secret.
+Take both outputs and store each of them as a github secret.
 
 4. Grab your twitch API credentials:
 ![image](https://github.com/user-attachments/assets/2e672c32-57ed-4bd8-b97d-7441efb16bdc)
