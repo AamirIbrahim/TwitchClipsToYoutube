@@ -11,7 +11,7 @@ An easy single script for:
 4. Uploading to Youtube with the description auto-filling with timestamps of the twitch creators downloaded.
 5. GitHub Actions workflow to run through twice a day.
 
-Prerequestites:
+<h2>Prerequestites:</h2>
 1. Google Cloud account to access Youtube Data V3 (Uploading youtube videos via API)
 
      https://developers.google.com/youtube/v3
@@ -23,9 +23,9 @@ Prerequestites:
    
     ```pip install -r requirements.txt```
 
-Steps:
+<h2>Steps:</h2>
 
-SECURITY NOTE: DO NOT PUSH ANY OF THESE TO A PUBLIC REPOSITORY:
+🔒SECURITY NOTE: DO NOT PUSH ANY OF THESE TO A PUBLIC REPOSITORY:🔒
 
   - client_secret.json
 
