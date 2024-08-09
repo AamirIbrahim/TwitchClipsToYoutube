@@ -14,6 +14,9 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
 import yt_dlp
+from dotenv import load_dotenv
+import ffmpeg
+load_dotenv()
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
@@ -252,7 +255,7 @@ def format_clips(broadcaster_name, language, file_name):
 
 def download_video(url, output_path='.'):
     ydl_opts = {
-        'format': 'best',
+        'format': '617+140',
         'outtmpl': f'{output_path}/%(title)s.%(ext)s',
     }
     
@@ -303,7 +306,7 @@ def main():
         description = "{0} \nFeatured Streamers: \n{1}".format(str(os.environ['YOUTUBE_DESCRIPTION']), "\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"  # Category ID for YouTube video categories
-        privacy_status = "public"
+        privacy_status = "private"
         
         upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
     except Exception as e:
