@@ -1,7 +1,7 @@
 import requests
 import os
 import glob
-from moviepy.editor import VideoFileClip, concatenate_videoclips, TextClip, ImageClip, CompositeVideoClip
+from moviepy.editor import VideoFileClip, concatenate_videoclips, TextClip, ImageClip, CompositeVideoClip, AudioFileClip, CompositeAudioClip
 import time
 from datetime import datetime, timedelta
 import google_auth_oauthlib.flow
@@ -150,7 +150,7 @@ def text_to_transparent_image(text, font_path, font_size, output_path):
 def concatenate_clips(clips):
     target_resolution = (1920, 1080)  # Specify the target resolution
 
-    outro = VideoFileClip('outro/Outro.mp4')
+    outro = VideoFileClip('Outro.mp4')
     resized_outro = outro.resize(newsize=target_resolution)
     clips.append(resized_outro)
     
@@ -253,22 +253,14 @@ def format_clips(broadcaster_name, language, file_name):
     resized_clip = final.resize(newsize=target_resolution)
     return resized_clip
 
-def download_video(url, output_path='.'):
-    ydl_opts = {
-        'format': '617+140',
-        'outtmpl': f'{output_path}/%(title)s.%(ext)s',
-    }
-    
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-
 def main():
     try:
-        # Downloading Outro from unlisted youtube video for outro
-        # No need for Git LFS
-        video_url = 'https://www.youtube.com/watch?v={0}'.format(str(os.environ['OUTRO_ID']))
-        download_video(video_url, 'outro')
-        
+        videoclip = VideoFileClip("outro/Outro.mp4")
+        audioclip = AudioFileClip("outro/Outro.m4a")
+
+        new_audioclip = CompositeAudioClip([audioclip])
+        videoclip.audio = new_audioclip
+        videoclip.write_videofile("Outro.mp4")
         # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
@@ -305,8 +297,8 @@ def main():
         title = "{0} Bi-Daily Twitch Highlights #{1}".format(formatted_game_name, str(video_count))
         description = "{0} \nFeatured Streamers: \n{1}".format(str(os.environ['YOUTUBE_DESCRIPTION']), "\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
-        category_id = "20"  # Category ID for YouTube video categories
-        privacy_status = "private"
+        category_id = "20"
+        privacy_status = "public"
         
         upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
     except Exception as e:
