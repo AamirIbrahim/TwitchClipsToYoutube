@@ -26,13 +26,11 @@ jobs:
         echo "$YOUTUBE_CREDENTIALS" | base64 --decode > youtube_credentials.pickle
     - name: docker build
       run: docker build -t youtubetotwitch .
-      env:
-        TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
-        TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
-        GAME_NAME: "league of legends"
-        YOUTUBE_DESCRIPTION: ${{ secrets.YOUTUBE_DESCRIPTION }}
-        CHANNEL_ID: ${{ secrets.LOL_CHANNEL_ID }}
-        OUTRO_ID: ${{ secrets.YOUTUBE_OUTRO_ID }}
     - name: python run
-      run: docker run youtubetotwitch
+      run: |
+      docker run  -e TWITCH_CLIENT_ID=${{ secrets.TWITCH_CLIENT_ID }} \
+                  -e TWITCH_CLIENT_SECRET=${{ secrets.TWITCH_CLIENT_SECRET }}
+                  -e YOUTUBE_DESCRIPTION=${{ secrets.YOUTUBE_DESCRIPTION }}
+                  -e CHANNEL_ID: ${{ secrets.LOL_CHANNEL_ID }}
+                  -e OUTRO_ID: ${{ secrets.YOUTUBE_OUTRO_ID }} youtubetotwitch
       
