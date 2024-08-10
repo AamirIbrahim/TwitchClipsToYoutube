@@ -36,4 +36,3 @@ jobs:
         GAME_NAME: "league of legends"
         YOUTUBE_DESCRIPTION: ${{ secrets.YOUTUBE_DESCRIPTION }}
         CHANNEL_ID: ${{ secrets.VALORANT_CHANNEL_ID }}
-        OUTRO_ID: ${{ secrets.YOUTUBE_OUTRO_ID }}
