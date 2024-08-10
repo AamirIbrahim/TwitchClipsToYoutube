@@ -25,6 +25,7 @@ jobs:
         echo "TWITCH_CLIENT_SECRET=${{ secrets.TWITCH_CLIENT_SECRET }}" >> .env
         echo "YOUTUBE_DESCRIPTION=${{ secrets.YOUTUBE_DESCRIPTION }}" >> .env
         echo "CHANNEL_ID=${{ secrets.LOL_CHANNEL_ID }}" >> .env
+        echo "GAME_NAME='League of Legends'" >> .env
     - name: Decode and save YouTube credentials
       env:
         YOUTUBE_CREDENTIALS: ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }}
