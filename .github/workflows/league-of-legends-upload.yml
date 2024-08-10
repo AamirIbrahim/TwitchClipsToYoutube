@@ -19,6 +19,12 @@ jobs:
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}
       run: |
         echo "$GOOGLE_CLIENT_SECRET_JSON" | base64 --decode > client_secret.json
+    - name: Create .env file
+      run: |
+        echo "TWITCH_CLIENT_ID=${{ secrets.TWITCH_CLIENT_ID }}" >> .env
+        echo "TWITCH_CLIENT_SECRET=${{ secrets.TWITCH_CLIENT_SECRET }}" >> .env
+        echo "YOUTUBE_DESCRIPTION=${{ secrets.YOUTUBE_DESCRIPTION }}" >> .env
+        echo "CHANNEL_ID=${{ secrets.LOL_CHANNEL_ID }}" >> .env
     - name: Decode and save YouTube credentials
       env:
         YOUTUBE_CREDENTIALS: ${{ secrets.LEAGUE_OF_LEGENDS_YOUTUBE_CHANNEL_PICKLE }}
@@ -27,10 +33,4 @@ jobs:
     - name: docker build
       run: docker build -t 'youtubetotwitch' .
     - name: docker run
-      run: |
-        docker run youtubetotwitch
-          -e TWITCH_CLIENT_ID=${{ secrets.TWITCH_CLIENT_ID }} \
-          -e TWITCH_CLIENT_SECRET=${{ secrets.TWITCH_CLIENT_SECRET }} \
-          -e YOUTUBE_DESCRIPTION=${{ secrets.YOUTUBE_DESCRIPTION }} \
-          -e CHANNEL_ID=${{ secrets.LOL_CHANNEL_ID }} \
-          -e OUTRO_ID=${{ secrets.YOUTUBE_OUTRO_ID }} 
+      run: docker run --env-file .env youtubetotwitch
