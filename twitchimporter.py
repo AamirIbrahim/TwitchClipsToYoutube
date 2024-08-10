@@ -13,10 +13,6 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
-import yt_dlp
-from dotenv import load_dotenv
-import ffmpeg
-load_dotenv()
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
