@@ -269,6 +269,8 @@ def main():
             formatted_game_name = 'LoL'
         elif game_name == 'valorant':
             formatted_game_name = 'Valorant'
+        elif game_name == 'deadlock-1':
+            formatted_game_name = 'Deadlock'
         
         video_file = "final_video.mp4"
         title = "{0} Bi-Daily Twitch Highlights #{1}".format(formatted_game_name, str(video_count))
