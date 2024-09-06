@@ -238,7 +238,7 @@ def main():
         new_audioclip = CompositeAudioClip([audioclip])
         videoclip.audio = new_audioclip
         videoclip.write_videofile("Outro.mp4")
-        Oauth Token needed for grabbing twitch clips
+        # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
         clips = get_top_clips(game_id, client_id, oauth_token)
