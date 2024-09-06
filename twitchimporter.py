@@ -13,6 +13,7 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
+import yt_dlp
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
@@ -70,41 +71,21 @@ def get_top_clips(game_id, client_id, oauth_token):
     response.raise_for_status()
     return response.json()['data']
 
-def download_twitch_clip(clip_url, broadcaster_name, output_dir='clips'):
-    # Get the clip slug from the URL
-    clip_slug = clip_url.split('/')[-1]
+def download_clip(clip_url, download_folder, clip_title):
+    # Sanitize the clip title to create a safe filename
+    safe_title = ''.join(c for c in clip_title if c.isalnum() or c in ' _-').rstrip()
+    file_path = os.path.join(download_folder, f"{safe_title}.mp4")
 
-    # Step 1: Fetch clip metadata to get the actual video URL
-    api_url = f'https://api.twitch.tv/helix/clips?id={clip_slug}'
-    oauth_token = get_oauth_token(client_id, client_secret)
-
-    headers = {
-        'Client-ID': client_id,
-        'Authorization': f'Bearer {oauth_token}'
+    ydl_opts = {
+        'outtmpl': file_path,
+        'format': 'best'
     }
-    response = requests.get(api_url, headers=headers)
-    response.raise_for_status()
-    clip_data = response.json()
 
-    # Get the URL of the video file
-    try:
-        video_url = clip_data['data'][0]['thumbnail_url'].split('-preview-')[0] + '.mp4'
-    except (IndexError, KeyError):
-        raise ValueError('Invalid clip URL or clip not found.')
+    # Use yt-dlp to download the clip from the clip URL
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([clip_url])
 
-    # Step 2: Download the video
-    response = requests.get(video_url, stream=True)
-    response.raise_for_status()
-
-    # Ensure output directory exists
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Save the video file
-    output_path = os.path.join(output_dir, f'{broadcaster_name}.mp4')
-    with open(output_path, 'wb') as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
-    print(f'Clip downloaded successfully: {output_path}')
+    print(f"Downloaded: {file_path}")
 
 def get_oauth_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
@@ -257,7 +238,7 @@ def main():
         new_audioclip = CompositeAudioClip([audioclip])
         videoclip.audio = new_audioclip
         videoclip.write_videofile("Outro.mp4")
-        # Oauth Token needed for grabbing twitch clips
+        Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
         clips = get_top_clips(game_id, client_id, oauth_token)
@@ -271,7 +252,7 @@ def main():
         for idx, clip in enumerate(clips):
             if (clip['duration'] >= 10):
                 # Download clips, Edit them, and add them to our formatted_clips list
-                download_twitch_clip(clip['url'], str(idx) + '_' + clip['broadcaster_name'])
+                download_clip(clip['url'], 'clips', str(idx) + '_' + clip['broadcaster_name'])
                 formatted_clips.append(format_clips(clip['broadcaster_name'], clip['language'], str(idx) + '_' + clip['broadcaster_name']))
                 broadcasters.append(clip['broadcaster_name'])
                 minutes, seconds = divmod(duration, 60)
