@@ -33,6 +33,6 @@ jobs:
       env:
         TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
         TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
-        GAME_NAME: "deadlock-1"
+        GAME_NAME: "Deadlock"
         YOUTUBE_DESCRIPTION: ${{ secrets.YOUTUBE_DESCRIPTION }}
         CHANNEL_ID: ${{ secrets.DEADLOCK_CHANNEL_ID }}

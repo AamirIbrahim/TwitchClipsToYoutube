@@ -269,7 +269,7 @@ def main():
             formatted_game_name = 'LoL'
         elif game_name == 'valorant':
             formatted_game_name = 'Valorant'
-        elif game_name == 'deadlock-1':
+        elif game_name == 'Deadlock':
             formatted_game_name = 'Deadlock'
         
         video_file = "final_video.mp4"
