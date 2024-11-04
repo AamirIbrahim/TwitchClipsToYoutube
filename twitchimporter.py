@@ -232,12 +232,6 @@ def format_clips(broadcaster_name, language, file_name):
 
 def main():
     try:
-        videoclip = VideoFileClip("outro/Outro.mp4")
-        audioclip = AudioFileClip("outro/Outro.m4a")
-
-        new_audioclip = CompositeAudioClip([audioclip])
-        videoclip.audio = new_audioclip
-        videoclip.write_videofile("Outro.mp4")
         # Oauth Token needed for grabbing twitch clips
         oauth_token = get_oauth_token(client_id, client_secret)
         game_id = get_game_id(game_name, client_id, oauth_token)
@@ -279,7 +273,7 @@ def main():
         category_id = "20"
         privacy_status = "public"
         
-        upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
+        # upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
     except Exception as e:
         print(f"Error: {e}")
 
