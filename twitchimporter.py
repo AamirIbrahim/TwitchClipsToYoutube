@@ -263,8 +263,8 @@ def main():
             formatted_game_name = 'LoL'
         elif game_name == 'valorant':
             formatted_game_name = 'Valorant'
-        elif game_name == 'Deadlock':
-            formatted_game_name = 'Deadlock'
+        elif game_name == 'Black Ops 6':
+            formatted_game_name = 'Black Ops 6'
         
         video_file = "final_video.mp4"
         title = "{0} Bi-Daily Twitch Highlights #{1}".format(formatted_game_name, str(video_count))
@@ -273,7 +273,7 @@ def main():
         category_id = "20"
         privacy_status = "public"
         
-        # upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
+        upload_video(youtube, video_file, title, description, tags, category_id, privacy_status)
     except Exception as e:
         print(f"Error: {e}")
 

@@ -1,4 +1,4 @@
-name: DeadLock Upload
+name: Blops6 Upload
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
         echo "$GOOGLE_CLIENT_SECRET_JSON" | base64 --decode > client_secret.json
     - name: Decode and save YouTube credentials
       env:
-        YOUTUBE_CREDENTIALS: ${{ secrets.DEADLOCK_YOUTUBE_CHANNEL_PICKLE }}
+        YOUTUBE_CREDENTIALS: ${{ secrets.BLOPS6_YOUTUBE_CHANNEL_PICKLE }}
       run: |
         echo "$YOUTUBE_CREDENTIALS" | base64 --decode > youtube_credentials.pickle
     - name: Install dependencies
@@ -33,6 +33,6 @@ jobs:
       env:
         TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
         TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
-        GAME_NAME: "Deadlock"
+        GAME_NAME: "Black Ops 6"
         YOUTUBE_DESCRIPTION: ${{ secrets.YOUTUBE_DESCRIPTION }}
-        CHANNEL_ID: ${{ secrets.DEADLOCK_CHANNEL_ID }}
+        CHANNEL_ID: ${{ secrets.BLOPS6_CHANNEL_ID }}
