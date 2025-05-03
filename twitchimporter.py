@@ -14,6 +14,9 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont
 import re
 import yt_dlp
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client_secrets_file = 'client_secret.json'
 credentials_file = 'youtube_credentials.pickle'
@@ -266,14 +269,16 @@ def main():
         if len(distinct_broadcasters) < 5:
             featured_broadcasters = distinct_broadcasters
         else:
-            featured_broadcasters = distinct_broadcasters[:5]
+            featured_broadcasters = distinct_broadcasters[:3] + ["and more"]
         
         video_file = "final_video.mp4"
         # Update the title to include the featured broadcasters
         title = "{0} Daily Twitch Highlights #{1} featuring ({2})".format(
             game_name, str(video_count), ", ".join(featured_broadcasters)
         )
+        print(f"Title: {title}")
         description = "Featured Streamers: \n{0}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
+        print(f"Description: {description}")
         tags = broadcasters
         category_id = "20"
         privacy_status = "public"
