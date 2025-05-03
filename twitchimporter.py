@@ -273,7 +273,7 @@ def main():
         title = "{0} Daily Twitch Highlights #{1} featuring ({2})".format(
             game_name, str(video_count), ", ".join(featured_broadcasters)
         )
-        description = "{0} \nFeatured Streamers: \n{1}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
+        description = "Featured Streamers: \n{0}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"
         privacy_status = "public"
