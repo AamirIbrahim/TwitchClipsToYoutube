@@ -115,21 +115,24 @@ def draw_text_with_outline(draw, position, text, font, outline_color, fill_color
 def text_to_transparent_image(text, font_path, font_size, output_path):
     font = ImageFont.truetype(font_path, font_size)
     
-    text_width, text_height = 200000, 221 #font.getsize(text)
+    # Dynamically calculate the size of the text
+    text_width, text_height = font.getsize(text)
+    ascent, descent = font.getmetrics()
+    total_height = text_height + descent  # Include the descent to avoid cutting off descenders
     
-    outline_width = 2  # width of the outline
+    outline_width = 2  # Width of the outline
 
-    image = Image.new('RGBA', (text_width + 2*outline_width, text_height + 2*outline_width), (255, 255, 255, 0))
+    # Create an image with the correct dimensions
+    image = Image.new('RGBA', (text_width + 2 * outline_width, total_height + 2 * outline_width), (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
+    
+    # Draw the text with an outline
     draw_text_with_outline(draw, (outline_width, outline_width), text, font, outline_color=(0, 0, 0, 255), fill_color=(255, 255, 255, 255))
+    
+    # Save the image
     image.save(output_path, 'PNG')
 
 def concatenate_clips(clips):
-    target_resolution = (1920, 1080)  # Specify the target resolution
-
-    outro = VideoFileClip('Outro.mp4')
-    resized_outro = outro.resize(newsize=target_resolution)
-    clips.append(resized_outro)
     
     final_clip = concatenate_videoclips(clips)
     final_clip.write_videofile('final_video.mp4', codec='libx264', threads = 16, fps=60)
@@ -257,18 +260,20 @@ def main():
         concatenate_clips(formatted_clips)
         
         youtube, video_count = get_authenticated_service()
-        formatted_game_name = ''
-
-        if game_name == 'league of legends':
-            formatted_game_name = 'LoL'
-        elif game_name == 'valorant':
-            formatted_game_name = 'Valorant'
-        elif game_name == 'Black Ops 6':
-            formatted_game_name = 'Black Ops 6'
+        
+        distinct_broadcasters = list(dict.fromkeys(broadcasters))  # Removes duplicates while preserving order
+        # Fallback: If there are fewer than 5 distinct broadcasters, display all of them
+        if len(distinct_broadcasters) < 5:
+            featured_broadcasters = distinct_broadcasters
+        else:
+            featured_broadcasters = distinct_broadcasters[:5]
         
         video_file = "final_video.mp4"
-        title = "{0} Bi-Daily Twitch Highlights #{1}".format(formatted_game_name, str(video_count))
-        description = "{0} \nFeatured Streamers: \n{1}".format(str(os.environ['YOUTUBE_DESCRIPTION']), "\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
+        # Update the title to include the featured broadcasters
+        title = "{0} Daily Twitch Highlights #{1} featuring ({2})".format(
+            game_name, str(video_count), ", ".join(featured_broadcasters)
+        )
+        description = "{0} \nFeatured Streamers: \n{1}".format("\n".join("{} {}".format(x, y) for x,y in zip(duration_video, broadcasters)))
         tags = broadcasters
         category_id = "20"
         privacy_status = "public"
