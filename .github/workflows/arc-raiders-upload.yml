@@ -2,8 +2,8 @@ name: Arc Raiders Upload
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 14 * * *'
+  # schedule:
+    # - cron: '0 14 * * *'
 
 jobs:
   build:
